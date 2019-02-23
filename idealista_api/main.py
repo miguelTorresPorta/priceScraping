@@ -33,18 +33,16 @@ ACCESS_TOKEN = get_access_token()
 ################################################################################
 
 headers = {
-    "Host": "api.idealista.com",
-    "User-Agent": cfg.USER_AGENT,
     "Authorization": "Bearer " + ACCESS_TOKEN,
-    "Content-Type": "multipart/form-data",
 }
 
 files = {
-    "center": (None, "40.430,-3.702"),
-    "propertyType": (None, "homes"),
-    "distance": (None, "15000"),
-    "operation": (None, "sale"),
-}
+        "country": "es",
+        "operation": "sale",
+        "propertyType":"homes",
+        "center":'40.123,-3.242',
+        "distance":"1500"
+    }
 
 response = requests.post("http://api.idealista.com/3.5/es/search", headers=headers, data=files)
 
