@@ -31,22 +31,47 @@ def get_access_token():
 ACCESS_TOKEN = get_access_token()
 
 ################################################################################
-
-headers = {
-    "Authorization": "Bearer " + ACCESS_TOKEN,
-}
-
-files = {
-        "country": "es",
-        "operation": "sale",
-        "propertyType":"homes",
-        "center":'40.123,-3.242',
-        "distance":"1500"
+for i in range (50):
+    headers = {
+        "Authorization": "Bearer " + ACCESS_TOKEN,
     }
-
-response = requests.post("http://api.idealista.com/3.5/es/search", headers=headers, data=files)
-
-# Test
-print(response.status_code)
-print(response.text)
-print(ACCESS_TOKEN)
+    
+    files = {
+            "country": "es",
+            "operation": "sale",
+            "propertyType":"homes",
+            "center":'40.475897,-3.680078',
+            # "center":'40.450494,-3.712827',
+            "distance":"15000"
+        }
+    
+    response = requests.post("http://api.idealista.com/3.5/es/search", headers=headers, data=files)
+    
+    # Test
+    print(response.status_code)
+    print(response.text)
+    print(ACCESS_TOKEN)
+    
+    import json
+    
+    y = json.loads(response.text)
+    print (y['elementList'][0])
+    
+    pisos =[]
+    
+    for item in range (len(y['elementList'])):
+    
+        flat = (y['elementList'][item])
+        if 'parkingSpace' in flat:        
+            flat['parkingIncludedInprice'] = flat['parkingSpace']['isParkingSpaceIncludedInPrice']
+            flat['parkingSpace'] = flat['parkingSpace']['hasParkingSpace']
+        pisos.append(flat)
+        
+    import csv
+    
+    
+    import pandas as pd
+    pisos_df = pd.DataFrame(pisos)
+    pisos_df.to_csv('pisosDFJaime.csv', index=False, header=True)
+    
+    
